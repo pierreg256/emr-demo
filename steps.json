@@ -1,0 +1,30 @@
+[
+	{
+        "name": "Setup Hadoop Debugging",
+        "action_on_failure": "TERMINATE_JOB_FLOW",
+        "hadoop_jar_step": {
+            "args": [
+                "s3://eu-west-1.elasticmapreduce/libs/state-pusher/0.1/fetch"
+            ],
+            "jar": "s3://eu-west-1.elasticmapreduce/libs/script-runner/script-runner.jar"
+        }
+    },
+    {
+        "name": "Example Streaming Step",
+        "action_on_failure": "CANCEL_AND_WAIT",
+        "hadoop_jar_step": {
+            "jar": "/home/hadoop/contrib/streaming/hadoop-streaming.jar",
+            "args": [
+                "-input",
+                "s3://bigdatablogdemo/wikipedia/wikistats/pagecounts",
+                "-output",
+                "s3://pgt-bigdata-demo/out",
+                "-mapper",
+                "s3://pgt-bigdata-demo/code/mapper.js",
+                "-reducer",
+                "s3://pgt-bigdata-demo/code/reducer.js"
+            ]
+        }
+    }
+]
+

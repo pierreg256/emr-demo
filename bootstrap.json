@@ -1,0 +1,9 @@
+[
+	{
+		"script_bootstrap_action": {
+	      		"path": "s3://elasticmapreduce/samples/node/install-node-bin-x86.sh",
+	      		"args": []
+	    	},
+	  		"name": "Install Node"
+	}
+]

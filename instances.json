@@ -1,0 +1,21 @@
+{ 
+   "ec_2_key_name": "id_rsa",
+    "instance_groups": [
+        {
+            "name": "Master Instance Group",
+            "instance_role": "MASTER",
+            "instance_type": "cc2.8xlarge",
+            "instance_count": 1,
+            "market": "ON_DEMAND"
+        },
+        {
+            "name": "Core Instance Group",
+            "instance_role": "CORE",
+            "instance_type": "m1.medium",
+            "instance_count": 5,
+            "market": "ON_DEMAND"
+        }
+    ],
+    "keep_job_flow_alive_when_no_steps": false,
+    "termination_protected": false
+} 
