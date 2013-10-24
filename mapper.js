@@ -3,16 +3,17 @@
 var events = require('events');
 var emitter = new events.EventEmitter();
 var remaining = '';
-var INPUT_FILE_NAME = process.env.map_input_file;
-var dateKey = INPUT_FILE_NAME.split("-")[1].substring(0,6);
 
 emitter.on('lineReady', function(line){
 	//process.stderr.write('line: '+line+'\n');
+	var INPUT_FILE_NAME = process.env.map_input_file;
+	var dateKey = INPUT_FILE_NAME.split("-")[1].substring(0,6);
 
 	fields = line.split(' ');
 	articleKey = fields[0]+'|'+fields[1];
 	count = fields[2]
-	process.stdout.write(articleKey + '\t' + dateKey + ' ' + count + '\n')
+	if (articleKey.substring(0,2)=='fr')
+		process.stdout.write(articleKey + '\t' + dateKey + ' ' + count + '\n')
 });
 
 // fires on every block of data read from stdin

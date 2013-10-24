@@ -9,7 +9,7 @@ function init () {
 	summary = {
 		"key": "",
 		"count": 0,
-		"200810": 0
+		//"200810": 0
 	};
 }
 
@@ -32,7 +32,9 @@ emitter.on('lineReady', function(obj){
 	}
 
 	summary.count += Number(values[1]);
-	summary[values[0]] = (summary[values[0]] === "" ? Number(values[1]) : summary[values[0]] + Number(values[1]));
+	if (!summary[values[0]])
+		summary[values[0]]=0;
+	summary[values[0]] = (summary[values[0]] ? Number(values[1]) : summary[values[0]] + Number(values[1]));
 	//log = JSON.parse(obj.split('\t')[1]);
 });
 
