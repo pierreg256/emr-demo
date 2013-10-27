@@ -26,7 +26,7 @@ function checkArtcile(article) {
 
 	article = article.toLowerCase();
 	// Remove any wikipedia special article
-	reg.compile("(portail|aide|discussion|discuter|discussion_modèle|cial|image|fichier|media|mediawiki|utilisateur|user|catégorie|special|Spécial|wikipedia|wikipédia)\:(.*)","g")
+	reg.compile("(kanji|portail|aide|discussion|discuter|discussion_modèle|cial|image|fichier|media|mediawiki|utilisateur|user|catégorie|special|Spécial|wikipedia|wikipédia)\:(.*)","g")
 	if (reg.test(article))
 		return '';
 
@@ -35,7 +35,13 @@ function checkArtcile(article) {
 	if (reg.test(article))
 		return '';
 
-	article = article.replace(/[éèêë]/g,'e').replace(/[aáàäâ]/g,'a').replace(/[ùûü]/g, 'u').replace(/[òóôö]/g,'o').replace(/[ìíïî]/g,'i').replace(/[\\]/,'').replace(/[ç]/g,'c');
+	//remove any unwanted page
+	reg.compile("(accueil)","g");
+	if (reg.test(article))
+		return '';
+
+
+	article = article.replace(/[éèêë]/g,'e').replace(/[aáàäâ]/g,'a').replace(/[ùûü]/g, 'u').replace(/[òóôö]/g,'o').replace(/[ìíïî]/g,'i').replace(/[\\]/,'').replace(/[ç]/g,'c').replace(/["]/g,'_');
 	//process.stderr.write("article: "+article+'\n');
 	return article
 

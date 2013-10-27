@@ -41,29 +41,38 @@ if ('development' == app.get('env')) {
 app.get('/', function(req, res){
 	if (req.query.article){
 		console.log('looking for: '+req.query.article);
-		connection.query('select * from monthly_timeline where article =\''+req.query.article+'\'', function(err, rows, fields) {
+		connection.query('select * from monthly_timeline where article ="'+req.query.article+'"', function(err, rows, fields) {
 			if (err) {
 				console.log(util.inspect(err));
-				res.render('index', {error:"Unable to find the record, try another expression", "top10":top10});
+				res.render('index', {error:err, "top10":top10});
 			} else {
 				console.log('Found: ' + util.inspect(rows[0]));
 				connection.query('select * from monthly_timeline where total_count <'+rows[0].total_count+' order by total_count desc LIMIT 9', function(err2, rows2, fields2) {
 					if (err2) {
 						console.log(util.inspect(err2));
-						res.render('index', {error:"Unable to find the record, try another expression", "top10":top10});
+						res.render('index', {error:err, "top10":top10});
 					} else {
 					  	var result=[];
 					  	result.push(rows[0]);
 					  	for (i=0; i<rows2.length;i++){
 					  		result.push(rows2[i]);
 					  	}
-					  	res.render('index', {"top10":result});
+					  	res.render('index', {"error":undefined, "top10":result});
 					}
 				});
 			}
 		});
 	} else {
-		res.render('index', { "top10": top10 });
+		connection.query('select * from monthly_timeline order by total_count desc limit 10;', function(err, rows, fields){
+			if (err) {
+				top10=[];
+				res.render('index', {error:err, "top10":top10});
+			} else {
+				top10=rows;
+				res.render('index', { "error":undefined, "top10": top10 });
+			}
+		});
+
 	}
 });
 
@@ -96,7 +105,7 @@ connection.query('select * from monthly_timeline order by total_count desc limit
 		top10=[];
 	} else {
 		top10=rows;
-		console.log(util.inspect(top10));
+		//console.log(util.inspect(top10));
 	}
 });
 

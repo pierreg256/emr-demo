@@ -38,7 +38,7 @@ function init () {
 
 
 function printLine() {
-	var insert='insert into monthly_timeline(article, total_count ';
+	var insert='insert ignore into monthly_timeline(article, total_count ';
 	var values=' values (';
 	if (summary.key == undefined) {
 		init();
@@ -57,7 +57,7 @@ function printLine() {
 			values+=', '+summary[entetes[i]];
 		}
 		//process.stdout.write(summary.count+'\n');
-		if (summary.count > 500)
+		if (summary.count > 1000)
 			process.stdout.write(insert+') '+values+');\n');
 	} catch (err) {
 	}
