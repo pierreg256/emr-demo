@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bootstrap 101 Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+    <!-- BEgin charts -->
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawCharts);
+
+    <% var entetes = [
+	["200810", "Oct-2010"],
+	["200811", "Nov-2010"],
+	["200812", "Dec-2010"],
+	["200901", "Jan-2011"],
+	["200902", "Feb-2011"],
+	["200903", "Mar-2011"],
+	["200904", "Apr-2011"],
+	["200905", "May-2011"],
+	["200906", "Jun-2011"],
+	["200907", "Jul-2011"],
+	["200908", "Aug-2011"],
+	["200909", "Sep-2011"],
+	["200910", "Oct-2011"],
+	["200911", "Nov-2011"],
+	["200912", "Dec-2011"],
+	["201001", "Jan-2011"],
+	//["201002", "Feb-2012"],
+];
+%>
+
+		function drawCharts() {
+			<% for(i=0;i<top10.length;i++) { %>
+				drawChart_<%=i%>();
+			<% } %>
+			drawDetailedChart();
+		}
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+
+      function drawDetailedChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Month');
+        data.addColumn('number', 'Views');
+        data.addRows([
+        	<% for(j=0;j<entetes.length;j++) { %>
+        		["<%=entetes[j][1]%>",<%=top10[0][entetes[j][0]]%>],
+        	<% } %>
+        ]);
+
+        // Set chart options
+        var options = {'title':'<%=top10[0].article%>'};//,
+                       //'width':700,
+                       //'height':250};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.AreaChart(document.getElementById('detailed_chart'));
+        chart.draw(data, options);
+      }
+
+	<% for(index=0;index<top10.length;index++) { %>
+      function drawChart_<%=index%>() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Month');
+        data.addColumn('number', 'Views');
+        data.addRows([
+        	<% for(j=0;j<entetes.length;j++) { %>
+        		["<%=entetes[j][1]%>",<%=top10[index][entetes[j][0]]%>],
+        	<% } %>
+        ]);
+
+        // Set chart options
+        var options = {'title':'<%=top10[index].article%>',
+                       'width':300,
+                       'height':50};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.AreaChart(document.getElementById('top<%=index%>_div'));
+        chart.draw(data, options);
+      }
+    <% } %>
+    </script>
+    <!-- End Charts -->
+
+  </head>
+  <body>
+
+	<div class="container">
+
+		<div class="row">
+			<div class='span3'>
+			</div>
+			<div class="span9">
+				<div class="container lead">
+					<form class="form-search">
+					  Find topics <input name="article" type="text" class="typeahead" autocomplete="off" data-provide="typeahead" >
+					  <button type="submit" class="btn">Search</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<H1>Trends for <%=top10[0].article%></H1>
+			<HR>
+				<div id="detailed_chart" class="container"></div>
+		</div>
+
+		<div class="row">
+			<H1>Related trends</H1>
+			<HR>
+				<table class="table table-striped">
+					<thead>
+						<th>Rank</th>
+						<th>Views</th>
+						<th>Trend</th>
+						<th>Article</th>
+					</thead>
+	        	<% for (i=0;i<top10.length;i++) { %>
+	        		<tr>
+	        			<td><%=i+1%></td>
+	        			<td><%=top10[i].total_count%></td>
+	        			<td><div id="top<%=i%>_div"></div></td>
+	        			<td><%=top10[i].article%></td>
+	        		</tr>
+	        	<% } %>
+	        	</table>
+
+		</div>
+  	</div>
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('input.typeahead').typeahead({
+          source: function (query, process) {
+            $.ajax({
+              url: 'data',
+              type: 'POST',
+              dataType: 'JSON',
+              data: 'query=' + query,
+              success: function(data) {
+                console.log(data);
+                process(data);
+              }
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

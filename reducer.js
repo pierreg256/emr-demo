@@ -57,7 +57,8 @@ function printLine() {
 			values+=', '+summary[entetes[i]];
 		}
 		//process.stdout.write(summary.count+'\n');
-		process.stdout.write(insert+') '+values+');\n');
+		if (summary.count > 500)
+			process.stdout.write(insert+') '+values+');\n');
 	} catch (err) {
 	}
 	init();
