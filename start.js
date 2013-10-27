@@ -15,7 +15,7 @@ var instances = {
             "Name": "Core Instance Group",
             "InstanceRole": "CORE",
             "InstanceType": "m1.medium",
-            "InstanceCount": 300,
+            "InstanceCount": 400,
             "Market": "ON_DEMAND"
         }
     ],
@@ -68,7 +68,7 @@ var params=[
 	'--region', 'eu-west-1',
 	'run-job-flow',
 	'--ami-version', '2.4.2',
-	'--name',  '"Wikipedia Streaming"',
+	'--name',  'Wikipedia Streaming',
 	'--instances',  JSON.stringify(instances), 
 	'--bootstrap-actions', JSON.stringify(bootstrapActions),
 	'--steps', JSON.stringify(steps),

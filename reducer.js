@@ -5,16 +5,55 @@ var emitter = new events.EventEmitter();
 var remaining = '';
 var summary = {};
 
+var entetes = [
+	"200810",
+	"200811",
+	"200812",
+	"200901",
+	"200902",
+	"200903",
+	"200904",
+	"200905",
+	"200906",
+	"200907",
+	"200908",
+	"200909",
+	"200910",
+	"200911",
+	"200912",
+	"201001",
+	"201002",
+];
+
 function init () {
 	summary = {
 		"key": "",
 		"count": 0,
-		//"200810": 0
 	};
+	for (i=0; i<entetes.length; i++) {
+		summary[entetes[i]] = 0;
+	}
+
 }
 
+
 function printLine() {
-	process.stdout.write(JSON.stringify(summary)+"\n");
+	if (summary.key == undefined) {
+		init();
+		return;
+	}
+	var unescaped = summary.key;
+	try {
+		unescaped = decodeURIComponent(summary.key);
+		summary.key = unescaped;
+		//process.stdout.write(JSON.stringify(summary)+"\n");
+		process.stdout.write(summary.key+'\t');
+		for (i=0; i<entetes.length; i++) {
+			process.stdout.write(summary[entetes[i]]+'\t');
+		}
+		process.stdout.write(summary.count+'\n');
+	} catch (err) {
+	}
 	init();
 }
 
@@ -34,7 +73,8 @@ emitter.on('lineReady', function(obj){
 	summary.count += Number(values[1]);
 	if (!summary[values[0]])
 		summary[values[0]]=0;
-	summary[values[0]] = (summary[values[0]] ? Number(values[1]) : summary[values[0]] + Number(values[1]));
+	//summary[values[0]] = (summary[values[0]] ? Number(values[1]) : summary[values[0]] + Number(values[1]));
+	summary[values[0]] += Number(values[1]);
 	//log = JSON.parse(obj.split('\t')[1]);
 });
 

@@ -9,11 +9,23 @@ emitter.on('lineReady', function(line){
 	var INPUT_FILE_NAME = process.env.map_input_file;
 	var dateKey = INPUT_FILE_NAME.split("-")[1].substring(0,6);
 
-	fields = line.split(' ');
-	articleKey = fields[0]+'|'+fields[1];
-	count = fields[2]
-	if (articleKey.substring(0,2)=='fr')
-		process.stdout.write(articleKey + '\t' + dateKey + ' ' + count + '\n')
+	reg = new RegExp("^fr (.*) ([0-9].*) ([0-9].*)$", "g");
+	if (reg.test(line)) {
+		reg.compile("(Image|Fichier|MediaWiki|Utilisateur|cat%c3%a9gorie|Cat%c3%a9gorie|Special|Sp%c3%a9cial|Sp%C3%A9cial|Wikipedia)\:(.*)");
+		if (!reg.test(line)) {
+			fields = line.split(' ');
+			count = fields[2]
+			//articleKey = fields[0]+'|'+fields[1];
+			
+			// enlever des images
+			reg.compile("(.*).(jpg|gif|png|JPG|GIF|PNG|txt|ico)", "g");
+			if (!reg.test(fields[1])){
+				reg.compile("^[A-Z](.*)$","g")
+				if (reg.test(fields[1]))
+					process.stdout.write(fields[1] + '\t' + dateKey + ' ' + count + '\n')
+			}
+		}
+	}
 });
 
 // fires on every block of data read from stdin
