@@ -38,6 +38,8 @@ function init () {
 
 
 function printLine() {
+	var insert='insert into monthly_timeline(article, total_count ';
+	var values=' values (';
 	if (summary.key == undefined) {
 		init();
 		return;
@@ -46,12 +48,16 @@ function printLine() {
 	try {
 		unescaped = decodeURIComponent(summary.key);
 		summary.key = unescaped;
-		//process.stdout.write(JSON.stringify(summary)+"\n");
-		process.stdout.write(summary.key+'\t');
+
+		values+='"'+summary.key+'", '+summary.count;
+		//process.stdout.write(summary.key+'\t');
 		for (i=0; i<entetes.length; i++) {
-			process.stdout.write(summary[entetes[i]]+'\t');
+			//process.stdout.write(summary[entetes[i]]+'\t');
+			insert+=', `'+entetes[i]+'`';
+			values+=', '+summary[entetes[i]];
 		}
-		process.stdout.write(summary.count+'\n');
+		//process.stdout.write(summary.count+'\n');
+		process.stdout.write(insert+') '+values+');\n');
 	} catch (err) {
 	}
 	init();
